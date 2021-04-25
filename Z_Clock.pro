@@ -44,3 +44,8 @@ DISTFILES += \
     logo.rc
 
 RC_FILE += logo.rc
+
+#include(singleapplication/singleapplication.pri)
+
+#DEFINES += QAPPLICATION_CLASS=QApplication
+## DEFINES += QAPPLICATION_CLASS=QCoreApplication

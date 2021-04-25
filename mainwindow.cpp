@@ -87,21 +87,21 @@ void MainWindow::icon_init()
 
 void MainWindow::menu_init()
 {
-        // miniSizeAction = new QAction("最小化(&N)",this);
-       // maxSizeAction = new QAction("最大化(&X)",this);
+         _act_hide = new QAction("隐藏(&N)",this);
+        _act_show = new QAction("显示(&X)",this);
         _act_lock = new QAction("解锁(&R)",this);
         _act_close = new QAction("退出(&Q)",this);
 
-//        this->connect(miniSizeAction,SIGNAL(triggered()),this,SLOT(hide()));
-//        this->connect(maxSizeAction,SIGNAL(triggered()),this,SLOT(showMaximized()));
+        this->connect(_act_hide,SIGNAL(triggered()),this,SLOT(hide()));
+        this->connect(_act_show,SIGNAL(triggered()),this,SLOT(show()));
         this->connect(_act_lock,&QAction::triggered,this,&MainWindow::set_lock);
         this->connect(_act_close,SIGNAL(triggered()),qApp,SLOT(quit()));  //不能使用close
         //this->connect(_act_close,&QAction::triggered,this,&MainWindow::close);
 
         //_myMenu = new QMenu((QWidget*)QApplication::desktop());
         _myMenu = new QMenu(this);
-        //_myMenu->addAction(miniSizeAction);
-       // _myMenu->addAction(maxSizeAction);
+        _myMenu->addAction(_act_hide);
+        _myMenu->addAction(_act_show);
         _myMenu->addAction(_act_lock);
         _myMenu->addSeparator();     //加入一个分离符
         _myMenu->addAction(_act_close);

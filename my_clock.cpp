@@ -10,7 +10,7 @@ My_Clock::My_Clock(QWidget *parent): QWidget(parent)
 
     timer = new QTimer(this);//创建一秒定时器
     timer->setInterval(1000);
-    connect(timer, SIGNAL(timeout()), this, SLOT(timer_run()));//信号与槽关联
+    connect(timer, SIGNAL(timeout()), this, SLOT(timer_run()));
     timer->start();
 }
 
@@ -45,8 +45,6 @@ void My_Clock::set_stop()
         timer->~QTimer();
     }
 }
-
-
 
 
 void My_Clock::clock_style_init()
@@ -97,6 +95,16 @@ void My_Clock::paintEvent(QPaintEvent *event)
 
 void My_Clock::timer_run()
 {
+
+//    QtConcurrent::run([=]()
+//    {
+
+//    });
+    set_update_time();
+
+}
+void My_Clock::set_update_time()
+{
     QTime cur_time = QTime::currentTime();
     set_second(cur_time.second());
     set_hour(cur_time.hour());
@@ -111,8 +119,7 @@ void My_Clock::timer_run()
 
 QString My_Clock::tool_date_convert(QString time)
 {
-    QStringList _value  =   {"〇","一","二","三","四","五","六","七","八","九"};
-    QStringList _unit   =   {"","十"};
+
     QString ret = "";
     QByteArray ba = time.toLatin1();//将QString 转换为 char *类型
     char *dateStr = ba.data();//将QString 转换为 char *类型

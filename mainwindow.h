@@ -34,8 +34,8 @@ private:
     Ui::MainWindow *ui;
     QSystemTrayIcon *_myIcon;
     QMenu *_myMenu;
-    QAction *miniSizeAction;
-    QAction *maxSizeAction;
+    QAction *_act_hide;
+    QAction *_act_show;
     QAction *_act_lock;
     QAction *_act_close;
     bool _b_lock = true;
