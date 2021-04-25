@@ -41,6 +41,7 @@ void MainWindow::set_window_transparent()
     setAttribute(Qt::WA_TranslucentBackground, true); //透明
     setWindowIcon(QIcon(":/imgs/clock_32.ico"));  //把图片设置到窗口上
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnBottomHint |Qt::Tool);//|Qt::Tool
+    setAttribute(Qt::WA_TransparentForMouseEvents,true);//鼠标是否穿透
     //setWindowFlags(Qt::FramelessWindowHint | Qt::Tool);//|Qt::Tool
     //setWindowFlag(Qt::ToolTip);
 }
@@ -86,8 +87,8 @@ void MainWindow::icon_init()
 
 void MainWindow::menu_init()
 {
-    miniSizeAction = new QAction("最小化(&N)",this);
-        maxSizeAction = new QAction("最大化(&X)",this);
+        // miniSizeAction = new QAction("最小化(&N)",this);
+       // maxSizeAction = new QAction("最大化(&X)",this);
         _act_lock = new QAction("解锁(&R)",this);
         _act_close = new QAction("退出(&Q)",this);
 
@@ -99,8 +100,8 @@ void MainWindow::menu_init()
 
         //_myMenu = new QMenu((QWidget*)QApplication::desktop());
         _myMenu = new QMenu(this);
-        _myMenu->addAction(miniSizeAction);
-        _myMenu->addAction(maxSizeAction);
+        //_myMenu->addAction(miniSizeAction);
+       // _myMenu->addAction(maxSizeAction);
         _myMenu->addAction(_act_lock);
         _myMenu->addSeparator();     //加入一个分离符
         _myMenu->addAction(_act_close);
@@ -112,16 +113,19 @@ void MainWindow::set_lock()
     if(_b_lock)
     {
         setAttribute(Qt::WA_TranslucentBackground, false); //透明
+        _clock->setAttribute(Qt::WA_TransparentForMouseEvents,false);//鼠标能否选中
         this->update();
         setProperty("CanMove",true);
-        this->resize(900,900);
+        //this->resize(900,900);
         _act_lock->setText("锁定(&R)");
     }
     else
     {
         setAttribute(Qt::WA_TranslucentBackground, true); //透明
+        _clock->setAttribute(Qt::WA_TransparentForMouseEvents,true);
+
         setProperty("CanMove",false);
-        this->resize(900,900);
+        //this->resize(900,900);
         this->update();
         _act_lock->setText("解锁(&R)");
 
