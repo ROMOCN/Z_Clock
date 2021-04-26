@@ -2,10 +2,6 @@
 
 My_Clock::My_Clock(QWidget *parent): QWidget(parent)
 {
-    _second_dail = new Circular_Dail(this);
-    _minute_dail = new Circular_Dail(this);
-    _hour_dail = new Circular_Dail(this);
-
     clock_style_init();
 
     timer = new QTimer(this);//创建一秒定时器
@@ -17,6 +13,36 @@ My_Clock::My_Clock(QWidget *parent): QWidget(parent)
 My_Clock::~My_Clock()
 {
 }
+
+
+void My_Clock::clock_style_init()
+{
+     _second_dail = new Circular_Dail(this);
+     _second_dail->move(0,0);
+     _second_dail->resize(this->width(),this->height());
+     _second_dail->set_dail_kind(ENUM_DAIL_KIND::DAIL_SECOND);
+     _second_dail->set_dail_radius(350);
+
+     _minute_dail = new Circular_Dail(this);
+     _minute_dail->move(0,0);
+     _minute_dail->resize(this->width(),this->height());
+     _minute_dail->set_dail_kind(ENUM_DAIL_KIND::DAIL_MINUTE);
+     _minute_dail->set_dail_radius(240);
+
+
+     _hour_dail = new Circular_Dail(this);
+     _hour_dail->move(0,0);
+     _hour_dail->resize(this->width(),this->height());
+     _hour_dail->set_dail_kind(ENUM_DAIL_KIND::DAIL_HOUR);
+     _hour_dail->set_dail_radius(120);
+
+     _date = new QLabel(this);
+     _date->setFont(QFont(0,12));
+     _date->resize(240,30);
+     _date->setStyleSheet("color:white; border-width:0; border-style:outset;");
+
+}
+
 
 void My_Clock::set_second(int second)
 {
@@ -33,8 +59,17 @@ void My_Clock::set_hour(int hour)
     _hour_dail->set_time(hour);
 }
 
-void My_Clock::set_color()
+void My_Clock::set_color(int r,int g,int b)
 {
+    QString cmd = QString("color:rgb(%1,%2,%3)").arg(r).arg(g).arg(b);
+    _date->setStyleSheet(cmd);
+    _r = r;
+    _g = g;
+    _b = b;
+    update();
+    _second_dail->set_color(r,g,b);
+    _minute_dail->set_color(r,g,b);
+    _hour_dail->set_color(r,g,b);
 
 }
 
@@ -46,52 +81,13 @@ void My_Clock::set_stop()
     }
 }
 
-
-void My_Clock::clock_style_init()
-{
-     _second_dail = new Circular_Dail(this);
-     _second_dail->move(0,0);
-     _second_dail->resize(this->width(),this->height());
-     _second_dail->set_dail_kind(ENUM_DAIL_KIND::DAIL_SECOND);
-     _second_dail->set_dail_radius(250);
-
-     _minute_dail = new Circular_Dail(this);
-     _minute_dail->move(0,0);
-     _minute_dail->resize(this->width(),this->height());
-     _minute_dail->set_dail_kind(ENUM_DAIL_KIND::DAIL_MINUTE);
-     _minute_dail->set_dail_radius(140);
-
-
-     _hour_dail = new Circular_Dail(this);
-     _hour_dail->move(0,0);
-     _hour_dail->resize(this->width(),this->height());
-     _hour_dail->set_dail_kind(ENUM_DAIL_KIND::DAIL_HOUR);
-     _hour_dail->set_dail_radius(20);
-
-     _date = new QLabel(this);
-     _date->setFont(QFont(0,12));
-     _date->resize(240,30);
-     _date->setStyleSheet("color:white; border-width:0; border-style:outset;");
-
-}
-
 void My_Clock::resizeEvent(QResizeEvent *event)
 {
     _second_dail->resize(this->width(),this->height());
     _minute_dail->resize(this->width(),this->height());
     _hour_dail->resize(this->width(),this->height());
     _date->move((this->width()/2) - (_date->width()/2.0),(this->height()/2) - (_date->height()/3.0));
-
 }
-
-void My_Clock::paintEvent(QPaintEvent *event)
-{
-    QPainter paint(this);
-    paint.setPen(QPen(Qt::white,3));
-    //paint.drawLine(_date->x(),_date->y() + _date->height() + 2,50,50);
-    paint.drawRect(_date->x() - 4,_date->y(),452 + _date->width()/2,30);//画矩形
-}
-
 
 void My_Clock::timer_run()
 {
@@ -101,8 +97,10 @@ void My_Clock::timer_run()
 
 //    });
     set_update_time();
-
 }
+
+
+//设置数字更新时间
 void My_Clock::set_update_time()
 {
     QTime cur_time = QTime::currentTime();
@@ -119,7 +117,6 @@ void My_Clock::set_update_time()
 
 QString My_Clock::tool_date_convert(QString time)
 {
-
     QString ret = "";
     QByteArray ba = time.toLatin1();//将QString 转换为 char *类型
     char *dateStr = ba.data();//将QString 转换为 char *类型
@@ -158,4 +155,11 @@ QString My_Clock::tool_date_convert(QString time)
 
     ret.append("日");
     return ret;
+}
+void My_Clock::paintEvent(QPaintEvent *event)
+{
+    QPainter paint(this);
+    paint.setPen(QPen(QColor(_r,_g,_b),4));
+    //paint.drawLine(_date->x(),_date->y() + _date->height() + 2,50,50);
+    paint.drawRect(_date->x() - 4,_date->y(),452 + _date->width()/2,30);//画矩形
 }

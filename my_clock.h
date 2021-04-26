@@ -8,6 +8,9 @@
 #include <QTime>
 #include <QDateTime>
 #include <QtConcurrent/QtConcurrentRun>
+#include <QGraphicsScene>
+#include <QGraphicsProxyWidget>
+#include <QGraphicsView>
 #include "circular_dail.h"
 class My_Clock :public QWidget
 {
@@ -19,15 +22,15 @@ public:
     void set_minute(int minute);
     void set_hour(int hour);
     void set_date();
-    void set_color();
+    void set_color(int r,int g,int b);
     void set_stop();
     void set_update_time();
+
     //年月日转换为大写
     QString tool_date_convert(QString time);
 public slots:
     void timer_run();
-private:
-
+private:   
     Circular_Dail *_second_dail;
     Circular_Dail *_minute_dail;
     Circular_Dail *_hour_dail;
@@ -40,6 +43,9 @@ private:
     void resizeEvent(QResizeEvent *event);
     void paintEvent(QPaintEvent *event);
 
+    int _r = 255;
+    int _g = 255;
+    int _b = 255;
 
 };
 

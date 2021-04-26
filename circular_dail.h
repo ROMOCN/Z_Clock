@@ -18,6 +18,7 @@ public:
     void set_dail_kind(ENUM_DAIL_KIND dail_kind);//设置表盘类型
     void set_dail_radius(int r);
     void set_time(int time);
+    void set_color(int r,int g,int b);
 private:
     ENUM_DAIL_KIND _dail_kind;
     //count :圆等分数

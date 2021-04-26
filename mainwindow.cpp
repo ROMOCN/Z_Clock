@@ -6,26 +6,19 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-    //Move::Instance()->start();
-
-
     icon_init();
     set_window_transparent();
 
     this->resize(900,900);
+    this->setMinimumSize(900,900);
     _clock = new My_Clock(this);
     _clock->resize(this->width(),this->height());
     _clock->move(0,0);
-
-
 }
 
 MainWindow::~MainWindow()
 {
-
     delete ui;
-
 }
 
 void MainWindow::paintEvent(QPaintEvent *event)
@@ -42,20 +35,6 @@ void MainWindow::set_window_transparent()
     setWindowIcon(QIcon(":/imgs/clock_32.ico"));  //把图片设置到窗口上
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnBottomHint |Qt::Tool);//|Qt::Tool
     setAttribute(Qt::WA_TransparentForMouseEvents,true);//鼠标是否穿透
-    //setWindowFlags(Qt::FramelessWindowHint | Qt::Tool);//|Qt::Tool
-    //setWindowFlag(Qt::ToolTip);
-}
-
-
-void MainWindow::Draw(int angle)
-{
-    QGraphicsScene* pScene = new QGraphicsScene(this);
-    //pScene->addWidget(_hour_dail);
-    QGraphicsView* pView = new QGraphicsView(pScene, this);
-    pView->translate(this->width()/2, this->height()/2);
-    pView->setGeometry(0, 0, this->width(), this->height());
-    pView->setStyleSheet("background:transparent; color:blue; border-width:0; border-style:outset;");
-    pView->rotate(30);
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)
@@ -66,6 +45,27 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     _clock->set_stop();
+}
+
+void MainWindow::set_color()
+{
+    QColorDialog dia(this);
+    dia.setWindowTitle("颜色");
+    dia.setCurrentColor(Qt::white);//常值传递const引用
+    dia.setCurrentColor(QColor(255,255,255));//通过生成临时对象来设置RGB初始参数
+    if(dia.exec() == QColorDialog::Accepted )
+    {
+        QColor color = dia.selectedColor();
+        _clock->set_color(color.red(),color.green(),color.blue());
+
+        qDebug() << color;
+        qDebug() << color.red();
+        qDebug() << color.green();
+        qDebug() << color.blue();
+        qDebug() << color.hue();
+        qDebug() << color.saturation();
+        qDebug() << color.value();
+    }
 }
 
 void MainWindow::icon_init()
@@ -89,9 +89,11 @@ void MainWindow::menu_init()
 {
          _act_hide = new QAction("隐藏(&N)",this);
         _act_show = new QAction("显示(&X)",this);
+        _act_color = new QAction("颜色(&C)",this);
         _act_lock = new QAction("解锁(&R)",this);
         _act_close = new QAction("退出(&Q)",this);
 
+        this->connect(_act_color,&QAction::triggered,this,&MainWindow::set_color);
         this->connect(_act_hide,SIGNAL(triggered()),this,SLOT(hide()));
         this->connect(_act_show,SIGNAL(triggered()),this,SLOT(show()));
         this->connect(_act_lock,&QAction::triggered,this,&MainWindow::set_lock);
@@ -100,6 +102,7 @@ void MainWindow::menu_init()
 
         //_myMenu = new QMenu((QWidget*)QApplication::desktop());
         _myMenu = new QMenu(this);
+        _myMenu->addAction(_act_color);
         _myMenu->addAction(_act_hide);
         _myMenu->addAction(_act_show);
         _myMenu->addAction(_act_lock);

@@ -2,7 +2,7 @@
 
 Circular_Dail::Circular_Dail(QWidget *parent):QWidget(parent)
 {
-    setStyleSheet("background:red; color:white; border-width:0; border-style:outset;");
+    setStyleSheet("background:transparent; color:white; border-width:0; border-style:outset;");
 }
 
 void Circular_Dail::set_dail_kind(ENUM_DAIL_KIND dail_kind)
@@ -21,7 +21,12 @@ void Circular_Dail::set_time(int time)
     update();
 }
 
-
+void Circular_Dail::set_color(int r,int g,int b)
+{
+    QString cmd = QString("color:rgb(%1,%2,%3)").arg(r).arg(g).arg(b);
+    setStyleSheet(cmd);
+    update();
+}
 
 void Circular_Dail::paintEvent(QPaintEvent *event)
 {
@@ -76,13 +81,14 @@ void Circular_Dail::dail_init(int count, QPainter *paint)
         {           
             content.append("       ");//十位为0时补位
         }
-
         content.append(_value[i_unit]);
         content.append(_clock[(int)_dail_kind]);
         paint->save();
         double offset = (_time - 1) * (360.0/count);
         paint->rotate((-i*angle) + offset);
-        paint->drawText(_radius,-10,300,30,Qt::AlignCenter,content);
+
+        paint->drawText(_radius,-10,100,30,Qt::AlignCenter,content);
+
         //paint->drawRect(80,80,-40,-40);
         paint->restore();
         i_unit = 0;
