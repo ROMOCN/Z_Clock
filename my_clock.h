@@ -11,6 +11,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsProxyWidget>
 #include <QGraphicsView>
+#include <QCoreApplication>
 #include "circular_dail.h"
 class My_Clock :public QWidget
 {
@@ -30,6 +31,7 @@ public:
     QString tool_date_convert(QString time);
 public slots:
     void timer_run();
+    void set_tran_value(int value);//设置 透明系数
 private:   
     Circular_Dail *_second_dail;
     Circular_Dail *_minute_dail;
@@ -46,6 +48,7 @@ private:
     int _r = 255;
     int _g = 255;
     int _b = 255;
+    int _t = 255;
 
 };
 

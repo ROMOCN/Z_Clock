@@ -18,7 +18,7 @@ void Circular_Dail::set_dail_radius(int r)
 void Circular_Dail::set_time(int time)
 {
     _time = time;
-    update();
+    //update();
 }
 
 void Circular_Dail::set_color(int r,int g,int b)
@@ -28,8 +28,36 @@ void Circular_Dail::set_color(int r,int g,int b)
     update();
 }
 
+void Circular_Dail::set_tran_value(int value)
+{
+    QColor color = this->palette().base().color();
+    QString cmd = QString("color:rgb(%1,%2,%3,%4)").arg(color.red()).arg(color.green()).arg(color.blue()).arg(value);
+    setStyleSheet(cmd);
+}
+void  Circular_Dail::run_func()
+{
+    QPainter paint(this);
+            paint.setRenderHint(QPainter::Antialiasing,true);
+            paint.translate(width()/2,height()/2);
+            paint.setFont(QFont(0,12));
+            switch(_dail_kind)
+            {
+            case ENUM_DAIL_KIND::DAIL_SECOND:
+
+                dail_init(60,&paint);
+            break;
+            case ENUM_DAIL_KIND::DAIL_MINUTE:
+                dail_init(60,&paint);
+            break;
+            case ENUM_DAIL_KIND::DAIL_HOUR:
+                dail_init(24,&paint);
+            break;
+            }
+}
 void Circular_Dail::paintEvent(QPaintEvent *event)
 {
+    //        QtConcurrent::run(this,&Circular_Dail::run_func);
+
         QPainter paint(this);
         paint.setRenderHint(QPainter::Antialiasing,true);
         paint.translate(width()/2,height()/2);
@@ -37,6 +65,7 @@ void Circular_Dail::paintEvent(QPaintEvent *event)
         switch(_dail_kind)
         {
         case ENUM_DAIL_KIND::DAIL_SECOND:
+
             dail_init(60,&paint);
         break;
         case ENUM_DAIL_KIND::DAIL_MINUTE:
@@ -46,6 +75,7 @@ void Circular_Dail::paintEvent(QPaintEvent *event)
             dail_init(24,&paint);
         break;
         }
+
 }
 
 void Circular_Dail::dail_init(int count, QPainter *paint)
@@ -54,7 +84,6 @@ void Circular_Dail::dail_init(int count, QPainter *paint)
     QString content = "";
     int i_unit = 0;
     int i_decade = 0;
-
     for(int i=0;i<count;i++)
     {
         i_unit = (i+1) % 10;
@@ -94,8 +123,12 @@ void Circular_Dail::dail_init(int count, QPainter *paint)
         i_unit = 0;
         i_decade = 0;
         content = "";
+
+        //QApplication::processEvents();
     }
 }
+
+
 /* 计算出旋转之后的坐标---按坐标旋转
  * point: 文字所在的点
  *  from_angle : 文字所在的度数

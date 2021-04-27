@@ -11,6 +11,8 @@
 #include <QAction>
 #include <QMenu>
 #include <QColorDialog>
+#include <QSlider>
+#include <QWidgetAction>
 #include "circular_dail.h"
 #include "my_clock.h"
 
@@ -37,11 +39,13 @@ private:
     Ui::MainWindow *ui;
     QSystemTrayIcon *_myIcon;
     QMenu *_myMenu;
+    QAction *_act_slider;
     QAction *_act_color;
     QAction *_act_hide;
     QAction *_act_show;
     QAction *_act_lock;
     QAction *_act_close;
+    QSlider *_translate_slider;
     bool _b_lock = true;
     void icon_init();
     void menu_init();

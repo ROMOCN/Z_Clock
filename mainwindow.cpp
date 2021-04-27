@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    icon_init();
+
     set_window_transparent();
 
     this->resize(900,900);
@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     _clock = new My_Clock(this);
     _clock->resize(this->width(),this->height());
     _clock->move(0,0);
+    icon_init();
 }
 
 MainWindow::~MainWindow()
@@ -87,23 +88,42 @@ void MainWindow::icon_init()
 
 void MainWindow::menu_init()
 {
+
+
+
+        _myMenu = new QMenu(this);
+        _myMenu->setMinimumWidth(180);
+        QMenu *slider_menu = new QMenu(_myMenu);
+        slider_menu->setMinimumWidth(120);
+         _act_slider = new QAction("透明度(&T)",this);
+         _act_slider->setMenu(slider_menu);
          _act_hide = new QAction("隐藏(&N)",this);
         _act_show = new QAction("显示(&X)",this);
         _act_color = new QAction("颜色(&C)",this);
         _act_lock = new QAction("解锁(&R)",this);
-        _act_close = new QAction("退出(&Q)",this);
+        _act_close = new QAction("退出",this);
+        _act_close->setShortcut(Qt::Key_F1);
+        QWidgetAction *_act_translate= new QWidgetAction(slider_menu);
+        _translate_slider = new QSlider(Qt::Horizontal,slider_menu);
+        _translate_slider->resize(100,30);
+        _translate_slider->setMinimum(0);
+        _translate_slider->setMaximum(255);
+        _translate_slider->setValue(255);
+        _act_translate->setDefaultWidget(_translate_slider);
+
 
         this->connect(_act_color,&QAction::triggered,this,&MainWindow::set_color);
         this->connect(_act_hide,SIGNAL(triggered()),this,SLOT(hide()));
         this->connect(_act_show,SIGNAL(triggered()),this,SLOT(show()));
         this->connect(_act_lock,&QAction::triggered,this,&MainWindow::set_lock);
         this->connect(_act_close,SIGNAL(triggered()),qApp,SLOT(quit()));  //不能使用close
-        //this->connect(_act_close,&QAction::triggered,this,&MainWindow::close);
-
-        //_myMenu = new QMenu((QWidget*)QApplication::desktop());
-        _myMenu = new QMenu(this);
+        connect(_translate_slider,&QSlider::valueChanged,_clock,&My_Clock::set_tran_value);
+        _myMenu->addAction(_act_slider);
+        slider_menu->addAction(_act_translate);
         _myMenu->addAction(_act_color);
+        _myMenu->addSeparator();     //加入一个分离符
         _myMenu->addAction(_act_hide);
+        _myMenu->addSeparator();     //加入一个分离符
         _myMenu->addAction(_act_show);
         _myMenu->addAction(_act_lock);
         _myMenu->addSeparator();     //加入一个分离符

@@ -8,6 +8,8 @@
 #include <QPoint>
 #include <qmath.h>
 #include <QDebug>
+#include <QApplication>
+#include <QtConcurrent/QtConcurrentRun>
 #include "Tools.h"
 using namespace Tools;
 class Circular_Dail: public QWidget
@@ -19,11 +21,14 @@ public:
     void set_dail_radius(int r);
     void set_time(int time);
     void set_color(int r,int g,int b);
+
+    void set_tran_value(int value);//设置 透明系数
+
 private:
     ENUM_DAIL_KIND _dail_kind;
     //count :圆等分数
     void dail_init(int count, QPainter *paint);
-
+    void run_func();
     void paintEvent(QPaintEvent *event);
 
     //test function

@@ -73,6 +73,17 @@ void My_Clock::set_color(int r,int g,int b)
 
 }
 
+void My_Clock::set_tran_value(int value)
+{
+    QColor color = _date->palette().base().color();
+    QString cmd = QString("color:rgb(%1,%2,%3,%4)").arg(color.red()).arg(color.green()).arg(color.blue()).arg(value);
+    _date->setStyleSheet(cmd);
+    _t = value;
+    _second_dail->set_tran_value(value);
+    _minute_dail->set_tran_value(value);
+    _hour_dail->set_tran_value(value);
+}
+
 void My_Clock::set_stop()
 {
     if(timer->isActive())
@@ -95,9 +106,14 @@ void My_Clock::timer_run()
 //    QtConcurrent::run([=]()
 //    {
 
+
 //    });
     set_update_time();
+    update();
+
 }
+
+
 
 
 //设置数字更新时间
@@ -159,7 +175,7 @@ QString My_Clock::tool_date_convert(QString time)
 void My_Clock::paintEvent(QPaintEvent *event)
 {
     QPainter paint(this);
-    paint.setPen(QPen(QColor(_r,_g,_b),4));
+    paint.setPen(QPen(QColor(_r,_g,_b,_t),4));
     //paint.drawLine(_date->x(),_date->y() + _date->height() + 2,50,50);
     paint.drawRect(_date->x() - 4,_date->y(),452 + _date->width()/2,30);//画矩形
 }
